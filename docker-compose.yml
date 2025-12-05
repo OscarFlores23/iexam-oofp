@@ -1,0 +1,42 @@
+services:
+    frontend:
+        image: client:v1.0.3 #Nombre de la imagen depende de la tabla
+        build:
+            context: ./client
+            args: 
+                API_HOST: localhost
+                API_BASE: /api/imc  #este cambia si lo cambias en el testcontroller.java del back, es el requestmapping, si lo cambias ahi, lo cambias aqui
+                API_PORT: 8081
+        container_name: imc-cliente #Nombre del contenedor depende de la tabla
+        ports:
+            - "3001:80"
+        networks:
+            - i2ex-oofp-net #Nombre de la red (tanton en la bd en el front y en el back se mantiene el mismo nombre)
+    
+    backend:
+        image:  calculator:v1.0.3 #Nombre de la imagen depende de la tabla
+        build:
+            context: ./services #Ruta del Dockerfile del backend y es el nomrbe de la carpeta del backend
+        environment:
+            SERVER_PORT: 8080    
+        container_name: imc-backend #Nombre del contenedor depende de la tabla
+        ports:
+            - "8081:8080"
+        networks:
+            - i2ex-oofp-net #Nombre de la red (tanton en la bd en el front y en el back se mantiene el mismo nombre)
+        depends_on:
+        - frontend
+
+# 1. docker volume create adj-volume
+volumes:
+    i2ex-oofp-volume:  #Nombre del volumen depende de la tabla
+        external: true
+
+# 2. docker network create --driver bridge adj-net
+# docker network ls
+networks:
+    i2ex-oofp-net:  #Nombre de la red depende de la tabla
+        external: true
+
+# 3. docker compose build --no-cache
+
