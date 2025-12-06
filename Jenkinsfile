@@ -6,7 +6,7 @@ pipeline {
         stage('Parando los servicios...') {
             steps {
                 bat '''
-                    docker compose -p i2ex-oofp down || exit /b 0
+                    docker compose -p sgu-oofp-10d down || exit /b 0
                 '''
             }
         }
@@ -15,7 +15,7 @@ pipeline {
         stage('Eliminando imágenes anteriores...') {
             steps {
                 bat '''
-                    for /f "tokens=*" %%i in ('docker images --filter "label=com.docker.compose.project=i2ex-oofp" -q') do (
+                    for /f "tokens=*" %%i in ('docker images --filter "label=com.docker.compose.project=sgu-oofp-10d" -q') do (
                         docker rmi -f %%i
                     )
                     if errorlevel 1 (
